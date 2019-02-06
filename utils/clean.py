@@ -1,12 +1,17 @@
 import argparse
+import sys
 
 # events_register_guard_template_no_description.txt
 # https://github.com/newsdev/fec2json/blob/master/utils/process_filing.py
 
+def clean_whole_thing(dirty):
+    cleaned = dirty.replace('\n\n', '\n')
+    return cleaned
+
 def process_file(path):
     with open(path, 'r') as f:
         dirty_copy = f.read()
-        return dirty_copy
+        return clean_whole_thing(dirty_copy)
 
 def main():
     parser = argparse.ArgumentParser()
