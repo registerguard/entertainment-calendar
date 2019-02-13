@@ -13,6 +13,10 @@ def clean_whole_thing(dirty):
     other_zips = re.compile(r', \d{5}(\.)$', re.MULTILINE)
     am_pm_inline = re.compile(r'(\d) ([a|p])m([^\.])')
     am_pm_end_of_sentence = re.compile(r'(\d) ([a|p])m\.')
+    hult_center = re.compile(r'(1|One) Eugene Center')
+    street_end = re.compile(r'Street\.$', re.MULTILINE)
+    avenue_end = re.compile(r'Avenue\.$', re.MULTILINE)
+    directional = re.compile(r'(\d) ([NESW])(orth|ast|outh|est) ')
 
     # straight-up replace
     cleaned = cleaned.replace(u':00', u'')
@@ -23,6 +27,15 @@ def clean_whole_thing(dirty):
     cleaned = other_zips.sub(u'\\1', cleaned)
     cleaned = am_pm_inline.sub(u'\\1 \\2.m.\\3', cleaned)
     cleaned = am_pm_end_of_sentence.sub(u'\\1 \\2.m.', cleaned)
+    cleaned = hult_center.sub(u'Seventh Avenue and Willamette Street', cleaned)
+    cleaned = street_end.sub(u'St.', cleaned)
+    cleaned = avenue_end.sub(u'Ave.', cleaned)
+    cleaned = directional.sub(u'\\1 \\2. ', cleaned)
+    
+    # back to a straight-up replace, 'cause order of things
+    cleaned = cleaned.replace(u'12 p.m.', 'noon')
+    cleaned = cleaned.replace(u'12 a.m.', 'midnight')
+
     return cleaned
 
 def process_file(path):
