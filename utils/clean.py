@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import argparse
 import re
 import sys
@@ -6,7 +9,7 @@ import sys
 # https://github.com/newsdev/fec2json/blob/master/utils/process_filing.py
 
 def clean_whole_thing(dirty):
-    cleaned = dirty
+    cleaned = dirty.decode('utf-8')
 
     # compile the regexes, just 'cause
     eugene_zips = re.compile(r', Eugene, 974\d\d')
@@ -31,7 +34,7 @@ def clean_whole_thing(dirty):
     cleaned = street_end.sub(u'St.', cleaned)
     cleaned = avenue_end.sub(u'Ave.', cleaned)
     cleaned = directional.sub(u'\\1 \\2. ', cleaned)
-    
+
     # back to a straight-up replace, 'cause order of things
     cleaned = cleaned.replace(u'12 p.m.', 'noon')
     cleaned = cleaned.replace(u'12 a.m.', 'midnight')
@@ -50,5 +53,5 @@ def main():
     output = process_file(args.path)
     sys.stdout.write(output)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     main()
