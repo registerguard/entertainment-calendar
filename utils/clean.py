@@ -44,6 +44,8 @@ def process_file(path):
         return clean_whole_thing(dirty_copy)
 
 def main():
+    # argparse!
+    # https://towardsdatascience.com/learn-enough-python-to-be-useful-argparse-e482e1764e05
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', help='path to the file we want to fix')
     args = parser.parse_args()
