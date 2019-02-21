@@ -50,7 +50,7 @@ def main():
     # argparse!
     # https://towardsdatascience.com/learn-enough-python-to-be-useful-argparse-e482e1764e05
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', help='path to the file we want to fix')
+    parser.add_argument('path', help='path to the file we want to fix')
     args = parser.parse_args()
     output = process_file(args.path)
     sys.stdout.write(output)
