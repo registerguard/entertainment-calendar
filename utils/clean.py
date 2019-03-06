@@ -20,6 +20,10 @@ def clean_whole_thing(dirty):
     street_end = re.compile(r'Street\.$', re.MULTILINE)
     avenue_end = re.compile(r'Avenue\.$', re.MULTILINE)
     directional = re.compile(r'(\d) ([NESW])(orth|ast|outh|est) ')
+    # This is just the start of this one.
+    # Currently turns "Weekday, Month Date, Year" => "Weekday, Month Date"
+    # but later will have to also abbreviate the month AP Style 
+    date_style = re.compile(r'^(\w+, \w+ \d{1,2}), \d{4}$', re.MULTILINE)
 
     # straight-up replace
     cleaned = cleaned.replace(u':00', u'')
@@ -34,6 +38,7 @@ def clean_whole_thing(dirty):
     cleaned = street_end.sub(u'St.', cleaned)
     cleaned = avenue_end.sub(u'Ave.', cleaned)
     cleaned = directional.sub(u'\\1 \\2. ', cleaned)
+    cleaned = date_style.sup(u'\\1', cleaned)
 
     # back to a straight-up replace, 'cause order of things
     cleaned = cleaned.replace(u'12 p.m.', 'noon')
