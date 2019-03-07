@@ -28,7 +28,7 @@ def clean_whole_thing(dirty):
     # straight-up replace
     cleaned = cleaned.replace(u':00', u'')
     cleaned = cleaned.replace(u'\n\n', u'\n')
-    cleaned = cleaned.replace(u'-', u'—')
+    cleaned = cleaned.replace(u' - ', u' — ')
     # regexes
     cleaned = eugene_zips.sub(u'', cleaned)
     cleaned = other_zips.sub(u'\\1', cleaned)
