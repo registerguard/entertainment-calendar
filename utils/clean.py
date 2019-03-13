@@ -5,8 +5,14 @@ import argparse
 import re
 import sys
 
+# The file argument is generally going to be:
 # events_register_guard_template_no_description.txt
+# 
+# In general, the layout of this app inspired by:
 # https://github.com/newsdev/fec2json/blob/master/utils/process_filing.py
+
+def title_it(matchobj):
+        return matchobj.group(0).title()
 
 def clean_whole_thing(dirty):
     cleaned = dirty.decode('utf-8')
@@ -20,6 +26,7 @@ def clean_whole_thing(dirty):
     street_end = re.compile(r'Street\.$', re.MULTILINE)
     avenue_end = re.compile(r'Avenue\.$', re.MULTILINE)
     directional = re.compile(r'(\d) ([NESW])(orth|ast|outh|est) ')
+    all_caps = re.compile(r'([A-Z][A-Z]+)')
     # This is just the start of this one.
     # Currently turns "Weekday, Month Date, Year" => "Weekday, Month Date"
     # but later will have to also abbreviate the month AP Style 
@@ -38,7 +45,8 @@ def clean_whole_thing(dirty):
     cleaned = street_end.sub(u'St.', cleaned)
     cleaned = avenue_end.sub(u'Ave.', cleaned)
     cleaned = directional.sub(u'\\1 \\2. ', cleaned)
-    cleaned = date_style.sup(u'\\1', cleaned)
+    cleaned = all_caps.sub(title_it, cleaned) # function makes changes to backreference
+    cleaned = date_style.sub(u'\\1', cleaned)
 
     # back to a straight-up replace, 'cause order of things
     cleaned = cleaned.replace(u'12 p.m.', 'noon')
