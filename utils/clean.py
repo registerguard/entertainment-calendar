@@ -26,7 +26,7 @@ def clean_whole_thing(dirty):
     street_end = re.compile(r'Street\.$', re.MULTILINE)
     avenue_end = re.compile(r'Avenue\.$', re.MULTILINE)
     directional = re.compile(r'(\d) ([NESW])(orth|ast|outh|est) ')
-    all_caps = re.compile(r'([A-Z][A-Z]+)')
+    all_caps = re.compile(r'([A-Z]{3}[A-Z]+)') #Three or more all caps
     # This is just the start of this one.
     # Currently turns "Weekday, Month Date, Year" => "Weekday, Month Date"
     # but later will have to also abbreviate the month AP Style 
