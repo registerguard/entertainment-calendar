@@ -19,12 +19,15 @@ def clean_whole_thing(dirty):
 
     # compile the regexes, just 'cause
     eugene_zips = re.compile(r', Eugene, 974\d\d')
-    other_zips = re.compile(r', \d{5}(\.)$', re.MULTILINE)
+    other_zips = re.compile(r', \d{5}(\.) ')
     am_pm_inline = re.compile(r'(\d) ([a|p])m([^\.])')
     am_pm_end_of_sentence = re.compile(r'(\d) ([a|p])m\.')
     hult_center = re.compile(r'(1|One) Eugene Center')
-    street_end = re.compile(r'Street\.$', re.MULTILINE)
-    avenue_end = re.compile(r'Avenue\.$', re.MULTILINE)
+    street_end = re.compile(r' Street\.')
+    street_mid = re.compile(r' Street,')
+    avenue_end = re.compile(r' Avenue\.')
+    avenue_mid = re.compile(r' Avenue,')
+    phone_no = re.compile(r'( \d{3}) ?(\d{3}) ?(\d{4})([\.\,])')
     directional = re.compile(r'(\d) ([NESW])(orth|ast|outh|est) ')
     all_caps = re.compile(r'([A-Z]{3}[A-Z]+)') #Three or more all caps
     # This is just the start of this one.
@@ -36,14 +39,20 @@ def clean_whole_thing(dirty):
     cleaned = cleaned.replace(u':00', u'')
     cleaned = cleaned.replace(u'\n\n', u'\n')
     cleaned = cleaned.replace(u' - ', u' — ')
+    # turns out CND scripts really prefer ':' to '—'
+    cleaned = cleaned.replace(u' — ', u': ')
+
     # regexes
     cleaned = eugene_zips.sub(u'', cleaned)
-    cleaned = other_zips.sub(u'\\1', cleaned)
+    cleaned = other_zips.sub(u'. ', cleaned)
     cleaned = am_pm_inline.sub(u'\\1 \\2.m.\\3', cleaned)
     cleaned = am_pm_end_of_sentence.sub(u'\\1 \\2.m.', cleaned)
     cleaned = hult_center.sub(u'Seventh Avenue and Willamette Street', cleaned)
-    cleaned = street_end.sub(u'St.', cleaned)
-    cleaned = avenue_end.sub(u'Ave.', cleaned)
+    cleaned = street_end.sub(u' St.', cleaned)
+    cleaned = street_mid.sub(u' St.,', cleaned)
+    cleaned = avenue_end.sub(u' Ave.', cleaned)
+    cleaned = avenue_mid.sub(u' Ave.,', cleaned)
+    cleaned = phone_no.sub(u'\\1-\\2-\\3\\4', cleaned)
     cleaned = directional.sub(u'\\1 \\2. ', cleaned)
     cleaned = all_caps.sub(title_it, cleaned) # function makes changes to backreference
     cleaned = date_style.sub(u'\\1', cleaned)
