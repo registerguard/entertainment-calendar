@@ -75,7 +75,7 @@ def main():
     parser.add_argument('path', help='path to the file we want to fix')
     args = parser.parse_args()
     output = process_file(args.path)
-    sys.stdout.write(output)
+    sys.stdout.write(output.encode('utf-8'))
 
 if __name__ == '__main__':
     main()
